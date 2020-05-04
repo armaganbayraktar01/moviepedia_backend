@@ -20,8 +20,8 @@ const PersonSchema = new Schema(
     // Media
     cover: String,
     createdAt: {
-    type: Date,
-    default: Date.now
+        type: Date,
+        default: Date.now
     }
 });
 

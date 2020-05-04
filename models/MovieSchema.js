@@ -26,9 +26,7 @@ const MovieSchema = new Schema(
         maxlength: [150, '`{PATH}` alanı en fazla ({MAXLENGTH}) karakter içerebilir'],
         minlength: [10, '`{PATH}` alanı en az ({MINLENGTH}) karakter içerebilir']
     },
-    // genres: [{ // category
-    //     genre: Schema.Types.ObjectId
-    // }],
+
     genres: [Schema.Types.ObjectId],
 
     // details

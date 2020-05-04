@@ -7,12 +7,14 @@ const uri = `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASS}@${proce
 
 module.exports = () => {
   mongoose.connect(uri, { 
+    useCreateIndex: true,
     useNewUrlParser: true,
+    useFindAndModify: false,
     useUnifiedTopology: true
   });
 
   mongoose.connection.on('open', () => {
-     console.log('MongoDB: Connected');
+     //console.log('MongoDB: Connected');
   });
   mongoose.connection.on('error', (err) => {
     console.log('MongoDB: Error', err);

@@ -7,7 +7,6 @@ const router = express.Router();
 const PersonSchema = require('../models/PersonSchema');
 
 // GET ALL
-
 router.get('/', (req, res, next) => {
     const promise = PersonSchema.aggregate([
         {
@@ -15,6 +14,21 @@ router.get('/', (req, res, next) => {
                 from: 'movies',
                 localField: '_id', // persons collection altındaki _id 
                 foreignField: 'director',// movies collection altındaki director
+                as: 'directedMovies'
+            }
+        },
+        { 
+            $unwind: { 
+                path: '$directedMovies',
+                preserveNullAndEmptyArrays: true // eşleşme olmayan dataları da çektik
+            }
+        },
+
+        {
+            $lookup: {
+                from: 'movies',
+                localField: '_id', // persons collection altındaki _id 
+                foreignField: 'cast',// movies collection altındaki director
                 as: 'filmography'
             }
         },
@@ -33,8 +47,12 @@ router.get('/', (req, res, next) => {
                     fullname: '$fullname',
                     bio: '$bio',
                     imbd_id: '$imbd_id',
+                    birth: '$birth',
                     cover: '$cover',
                     createdAt: '$createdAt'
+                },
+                directedMovies: {
+                    $push: '$directedMovies'
                 },
                 filmography: {
                     $push: '$filmography'
@@ -49,8 +67,10 @@ router.get('/', (req, res, next) => {
                 fullname: '$_id.fullname',
                 bio: '$_id.bio',
                 cover: '$_id.cover',
+                birth: '$_id.birth',
                 createdAt: '$_id.createdAt',
                 filmography: '$filmography',
+                directedMovies: '$directedMovies'
             }
         }
 
@@ -66,8 +86,7 @@ router.get('/', (req, res, next) => {
     });
 });
 
-// GET id
-
+// GET ID
 router.get('/:person_id', (req, res, next) => {
     const promise = PersonSchema.aggregate([
         {
@@ -75,11 +94,27 @@ router.get('/:person_id', (req, res, next) => {
                 '_id': mongoose.Types.ObjectId(req.params.person_id)
             } 
         },
+        // Directed Movie
         {
             $lookup: {
                 from: 'movies',
                 localField: '_id', // persons collection altındaki _id 
                 foreignField: 'director',// movies collection altındaki director
+                as: 'directedMovies'
+            }
+        },
+        { 
+            $unwind: { 
+                path: '$directedMovies',
+                preserveNullAndEmptyArrays: true // eşleşme olmayan dataları da çektik
+            }
+        },
+        // Filmography
+        {
+            $lookup: {
+                from: 'movies',
+                localField: '_id', // persons collection altındaki _id 
+                foreignField: 'cast',// movies collection altındaki director
                 as: 'filmography'
             }
         },
@@ -90,34 +125,82 @@ router.get('/:person_id', (req, res, next) => {
                 preserveNullAndEmptyArrays: true // eşleşme olmayan dataları da çektik
             }
         },
+
         {
             $group: 
             {
                 _id: {
                     _id: '$_id',
-                    person_name: '$person_name',
+                    fullname: '$fullname',
                     bio: '$bio',
                     imbd_id: '$imbd_id',
                     cover: '$cover',
-                    settings: '$settings'
+                    birth: '$birth',
+                    createdAt: '$createdAt'
+                },
+                directedMovies: {
+                    $push: '$directedMovies'
                 },
                 filmography: {
                     $push: '$filmography'
                 }
             }
         },
+
         {
             $project: {
                 _id: '$_id._id',
                 imbd_id: '$_id.imbd_id',
-                person_name: '$_id.person_name',
+                fullname: '$_id.fullname',
                 bio: '$_id.bio',
                 cover: '$_id.cover',
-                settings: '$_id.settings',
-                filmography: '$filmography'
+                birth: '$_id.birth',
+                createdAt: '$_id.createdAt',
+                filmography: '$filmography',
+                directedMovies: '$directedMovies'
             }
         }
+
     ]);
+
+    promise.then((data) => {
+        if (!data)
+            next({ message: 'The data was not found.', code: 404 });
+
+    const obj = Object.assign({}, ...data)
+    //console.log(obj)
+    res.json(obj);
+
+    }).catch((err) => {
+        res.json(err);
+    });
+});
+
+// Put
+router.put('/:person_id', (req, res, next) => {
+    const promise = PersonSchema.findByIdAndUpdate(
+        req.params.person_id,
+        req.body,
+        {
+            new: true
+        }
+    );
+
+    promise.then((data) => {
+        if (!data)
+            next({ message: 'The data was not found.', code: 99 });
+
+        res.json(data);
+    }).catch((err) => {
+        res.json(err);
+    });
+});
+
+
+// POST
+router.post('/', (req, res, next) => {
+    const newData = new PersonSchema(req.body);
+    const promise = newData.save();
 
     promise.then((data) => {
         if (!data)
@@ -129,73 +212,20 @@ router.get('/:person_id', (req, res, next) => {
     });
 });
 
-// Put
-router.put('/:person_id', (req, res, next) => {
-	const promise = PersonSchema.findByIdAndUpdate(
-		req.params.person_id,
-		req.body,
-		{
-			new: true
-		}
-	);
 
-	promise.then((data) => {
-		if (!data)
-			next({ message: 'The data was not found.', code: 99 });
+// Delete
+router.delete('/:person_id', (req, res, next) => {
+    const promise = PersonSchema.findByIdAndRemove(req.params.person_id);
 
-		res.json(data);
-	}).catch((err) => {
-		res.json(err);
-	});
+    promise.then((data) => {
+        if (!data)
+            next({ message: 'The movie was not found.', code: 99 });
+
+        res.json({ status: 1 });
+    }).catch((err) => {
+        res.json(err);
+    });
 });
-
-
-/*
-    // GET ALL
-    
-    router.get('/', (req, res, next) => {
-        const promise = PersonSchema.find();
-    
-        promise.then((data) => {
-            if (!data)
-                next({ message: 'The data was not found.', code: 404 });
-    
-        res.json(data);
-        }).catch((err) => {
-            res.json(err);
-        });
-    });
-*/
-    // POST
-    
-    router.post('/', (req, res, next) => {
-        const newData = new PersonSchema(req.body);
-        const promise = newData.save();
-    
-        promise.then((data) => {
-            if (!data)
-                next({ message: 'The data was not found.', code: 404 });
-    
-        res.json(data);
-        }).catch((err) => {
-            res.json(err);
-        });
-    });
-    
-
-    // Delete
-    router.delete('/:person_id', (req, res, next) => {
-        const promise = PersonSchema.findByIdAndRemove(req.params.person_id);
-
-        promise.then((data) => {
-            if (!data)
-                next({ message: 'The movie was not found.', code: 99 });
-
-            res.json({ status: 1 });
-        }).catch((err) => {
-            res.json(err);
-        });
-    });
 
 
 module.exports = router;
