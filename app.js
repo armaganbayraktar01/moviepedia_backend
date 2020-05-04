@@ -10,10 +10,10 @@ const logger = require('morgan');
 
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 const MovieRouter = require('./routes/MovieRouter');
 const PersonRouter = require('./routes/PersonRouter');
 const GenreRouter = require('./routes/GenreRouter');
+const UserRouter = require('./routes/UserRouter');
 
 /** GRAPHQL */ 
  // const schema = require('./schema/schema');
@@ -22,6 +22,13 @@ const app = express();
 
 //db connection
 const db = require('./config/db.js')();
+
+//Secret key
+const config = require('./config/config');
+app.set('api_secret_key', config.api_secret_key );
+
+// Middleware
+const verifyToken = require('./middleware/verify-token');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -42,11 +49,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api', verifyToken);
 app.use('/api/movies', MovieRouter);
 app.use('/api/persons', PersonRouter);
 app.use('/api/genres', GenreRouter);
-
+app.use('/api/users', UserRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
