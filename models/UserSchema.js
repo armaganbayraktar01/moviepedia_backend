@@ -47,7 +47,7 @@ const UserSchema = new Schema(
     },
     user_role: {
         type: String,
-        default: 3
+        default: "3"
     },
     user_bio: String,
     user_birth: Date,

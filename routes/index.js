@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const salt = 10;
-
-const jwt = require('jsonwebtoken');
 
 // Models
 const UserSchema = require('../models/UserSchema');
@@ -14,7 +13,7 @@ router.get('/', (req, res, next) => {
   res.render('index', { title: 'Express' });
 });
 
-/* GET register page */
+/* POST register User */
 router.post('/register', (req, res, next) => {
   const {user_name, user_password, user_email, user_fullname, user_question, user_answer, user_role, user_bio, user_birth, user_picture } = req.body;
   //const newData = new UserSchema(req.body);
@@ -49,7 +48,7 @@ router.post('/register', (req, res, next) => {
 
 });
 
-/* GET auth page */
+/* GET auth User */
 router.post('/auth', (req, res, next) => {
   const {user_name, user_password, user_email, user_fullname, user_question, user_answer, user_role, user_bio, user_birth, user_picture } = req.body;
 
@@ -102,7 +101,5 @@ router.post('/auth', (req, res, next) => {
   });
 
 });
-
-
 
 module.exports = router;
