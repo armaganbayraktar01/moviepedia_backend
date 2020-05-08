@@ -1,54 +1,70 @@
-# moviepedia_backend
-    moviepedia project backend files.
+# MOVIEPEDIA BACKEND 
 
-# backend generator kurulum ve çalıştırma
+That Restful API developed with Node.JS and Express
 
-1   $ npm install -g express-generator
-    $ express
+## Dependencies
 
-        // bulunduğumuz dizin içine dosyaları çıkarır
-2   $ express . 
+*  Express Generator Setup
+```jsx
+npm install -g express-generator
+express .
+express <APP FOLDER NAME>
 
-        // dizin içine <aplication_klasörü> adında bir klasör oluşturup dosyaları içine çıkarır.    
-2   $ express <aplication_klasörü> 
-            
+```
 
-3   $ npm install --s diyerek bağımlılıkları yükledik. 
+*  Port Settings
+```jsx
+bin/www.js
+default port: 3000
+edit port: 8080
+```
 
-    // bin/www.js içerisinde portu 8080 e ayarladım. default olarak 3000 geliyor
-4   $ npm startdev yaparak başlatabiliriz.
+* Localhost Cors bug fix => Access-Control-Allow-Origin...
+```jsx
+npm install cors --s
+```
 
-    
-# Movies
+## How to Install
+Clone this folder and install dependencies.
 
-| Route | HTTP Verb	 | POST body	 | Description	 |
-| --- | --- | --- | --- |
-| /api/movies | `GET` | Empty | List all movies. |
-| /api/movies | `POST` | {'title':'foo', 'category':'bar', 'country':'Turkey', year:1990, director:"id", imdb_score: 9.7 } | Create a new movie. |
-| /api/movies/:movie_id | `GET` | Empty | Get a movie. |
-| /api/movies/:movie_id | `PUT` | {'name':'foo', 'surname':'bar'} | Update a movie with new info. |
-| /api/movies/:movie_id | `DELETE` | Empty | Delete a movie. |
-| /api/movies/top10 | `GET` | Empty | Get the top 10 movies. |
-| /api/movies/between/:start_year/:end_year | `GET` | Empty | Movies between two dates. |
+```jsx
+mkdir moviepedia_backend
+cd moviepedia_backend
+git init
+git clone https://github.com/armaganbayraktar01/moviepedia_backend.git
+npm install
+```
 
-# Directors
+## Enviroments variables
+Create a file named ".env" in the root directory and fill its contents as follows.
 
-| Route | HTTP Verb	 | POST body	 | Description	 |
-| --- | --- | --- | --- |
-| /api/directors | `GET` | Empty | List all directors. |
-| /api/directors | `POST` | { name: 'foo', surname:'bar', bio:'lorem ipsum' } | Create a new director. |
-| /api/directors/:director_id | `GET` | Empty | Get a director. |
-| /api/directors/:director_id | `PUT` | {'name':'foo', 'surname':'bar', 'bio': 'lorem'} | Update a director with new info. |
-| /api/directors/:director_id | `DELETE` | Empty | Delete a director. |
-| /api/directors/:director_id/best10movie | `GET` | Empty | The director's top 10 films. |
+```jsx
+DB_USERNAME = DB USER USERNAME
+DB_PASS = DB USER PASSWORD
+DB_HOST = xxxxxx
+DB_NAME = xxxxxx
+API_SECRET_KEY: JWT TOKEN SECRET KEY
+```
 
-# Index
+## Available Scripts
 
-| Route | HTTP Verb	 | POST body	 | Description	 |
-| --- | --- | --- | --- |
-| /register | `POST` | { username: 'foo', password:'1234' } | Create a new user. |
-| /authenticate | `POST` | { username: 'foo', password:'1234' } | Generate a token. |
+```jsx
+npm start
+```
 
+```jsx
+npm dev
+```
+
+```jsx
+npm stop
+```
+
+```jsx
+npm test
+```
+
+## Endpoints
 
 
 
