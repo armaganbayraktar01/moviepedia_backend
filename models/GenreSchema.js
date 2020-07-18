@@ -7,12 +7,15 @@ const collectionName= 'genres'; // db de sonuna s gelerek movies olacak
 
 const GenreSchema = new Schema(
 {
-    genre: {
+    label: {
         type: String,
         required: [true, '`{PATH}` alanı zorunludur.'],
         maxlength: [25, '`{PATH}` alanı en fazla ({MAXLENGTH}) karakter içerebilir'],
         minlength: [1, '`{PATH}` alanı en az ({MINLENGTH}) karakter içerebilir']
-    },    
+    }, 
+    value: {
+        type: String,
+    },
      createdAt: {
         type: Date,
         default: Date.now

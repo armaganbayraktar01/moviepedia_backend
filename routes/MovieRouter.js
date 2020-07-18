@@ -51,13 +51,16 @@ router.get('/', (req, res) => {
                     "title" : "$title", 
                     "titleTr" : "$titleTr", 
                     "imbd_id" : "$imbd_id", 
-                    "genres" : "$genres.genre",
+                    "genres" : "$genres",
                     "synopsis" : "$synopsis",
                     "relase_year" : "$relase_year", 
                     "imbd_rating" : "$imbd_rating", 
                     "duration" : "$duration", 
                     "director" : "$director", 
                     "cover" : "$cover", 
+                    "images" : "$images",
+                    "videos" : "$videos",
+                    "countries" : "$countries",
                     "createdAt" : "$createdAt"
                 }, 
                 "cast" : { 
@@ -77,7 +80,10 @@ router.get('/', (req, res) => {
                 "duration" : "$_id.duration",
                 "synopsis" : "$_id.synopsis",
                 "director" : "$_id.director", 
-                "cover" : "$_id.cover", 
+                "cover" : "$_id.cover",
+                "images" : "$_id.images",
+                "videos" : "$_id.videos",
+                "countries" : "$_id.countries",
                 "createdAt" : "$_id.createdAt", 
                 "cast" : "$cast"
             }
@@ -96,8 +102,6 @@ router.get('/filmrobot/genre=:genre_name?&imbd=:imbd?&relase=:start_year-:end_ye
 
 	const { genre_name, imbd, sort_val, limit, start_year, end_year } = req.params;
 	
-	console.log(req.params)
-
 	const promise = MovieSchema.aggregate([
 		// director sorgusu
 		{
@@ -139,7 +143,7 @@ router.get('/filmrobot/genre=:genre_name?&imbd=:imbd?&relase=:start_year-:end_ye
 		{
 			$match: {	
 
-				"genres.genre" : genre_name ? genre_name : { 
+				"genres.label" : genre_name ? genre_name : { 
 					$in: ['crime', 'comedy', 'horror', 'war', 'action', 'drama', 'history']
 				},
 				"imbd_rating" : imbd == undefined ? { "$gte" : "1" } : { "$gte" : imbd },
@@ -160,6 +164,9 @@ router.get('/filmrobot/genre=:genre_name?&imbd=:imbd?&relase=:start_year-:end_ye
                     duration:'$duration',
                     director:'$director',
                     cover:'$cover',
+                    images : "$images",
+                    videos : "$videos",
+                    countries : "$countries",
                     createdAt:'$createdAt',
                  }
             }
@@ -176,6 +183,9 @@ router.get('/filmrobot/genre=:genre_name?&imbd=:imbd?&relase=:start_year-:end_ye
                 //duration:'$_id.duration',
                 //director:'$_id.director',
                 cover:'$_id.cover',
+                //images : "$_id.images",
+                //videos : "$_id.videos",
+                //countries : "$_id.countries",
                 createdAt:'$_id.createdAt',
                 //cast: '$cast',
             }
@@ -188,8 +198,6 @@ router.get('/filmrobot/genre=:genre_name?&imbd=:imbd?&relase=:start_year-:end_ye
 		},
 		{ $limit : parseInt(limit ? limit : 10 ) },
 	]);
-
-	console.log(req.params)
 
 	promise.then((data) => {
 		res.json(data);
@@ -242,11 +250,11 @@ router.get('/filmrobot/genre=:genre_name?&imbd=:imbd?&relase=:start_year?&sort=:
 		{
 			$unwind: '$cast'
 		},	
-		// match işlemi genres.genre unwind edilen genresten geliyor
+		// match işlemi genres.label unwind edilen genresten geliyor
 		{
 			$match: {	
 
-				"genres.genre" : genre_name ? genre_name : { 
+				"genres.label" : genre_name ? genre_name : { 
 					$in: ['crime', 'comedy', 'horror', 'war', 'action', 'drama', 'history']
 				},
 				"imbd_rating" : imbd == undefined ? { "$gte" : "1" } : { "$gte" : imbd },
@@ -348,12 +356,15 @@ router.get('/:movie_id', (req, res) => {
                     "titleTr" : "$titleTr", 
                     "imbd_id" : "$imbd_id",
                     "synopsis": "$synopsis",
-                    "genres" : "$genres.genre", 
+                    "genres" : "$genres", 
                     "relase_year" : "$relase_year", 
                     "imbd_rating" : "$imbd_rating", 
                     "duration" : "$duration", 
                     "director" : "$director", 
                     "cover" : "$cover", 
+                    "images" : "$images",
+                    "videos" : "$videos",
+                    "countries" : "$countries",
                     "createdAt" : "$createdAt"
                 }, 
                 "cast" : { 
@@ -373,7 +384,10 @@ router.get('/:movie_id', (req, res) => {
                 "duration" : "$_id.duration",
                 "synopsis" : "$_id.synopsis",
                 "director" : "$_id.director", 
-                "cover" : "$_id.cover", 
+                "cover" : "$_id.cover",
+                "images" : "$_id.images",
+                "videos" : "$_id.videos",
+                "countries" : "$_id.countries",
                 "createdAt" : "$_id.createdAt", 
                 "cast" : "$cast"
             }
@@ -382,7 +396,7 @@ router.get('/:movie_id', (req, res) => {
 
 	promise.then((data) => {
         const obj = Object.assign({}, ...data)
-        //console.log(obj)
+        //console.log('obj - ' + obj)
 		res.json(obj);
 	}).catch((err) => {
 		res.json(err);
@@ -397,7 +411,7 @@ router.put('/:movie_id', (req, res, next) => {
 		{
 			new: true
 		}
-	);
+    );
 
 	promise.then((movie) => {
 		if (!movie)

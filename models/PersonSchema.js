@@ -16,6 +16,7 @@ const PersonSchema = new Schema(
     },
     imbd_id: String,
     bio: String,
+    jobs: Array,
     birth: Date,
     // Media
     cover: String,

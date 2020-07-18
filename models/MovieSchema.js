@@ -23,7 +23,7 @@ const MovieSchema = new Schema(
     imbd_id: String,
     synopsis: {
         type: String,
-        maxlength: [150, '`{PATH}` alanı en fazla ({MAXLENGTH}) karakter içerebilir'],
+        maxlength: [300, '`{PATH}` alanı en fazla ({MAXLENGTH}) karakter içerebilir'],
         minlength: [10, '`{PATH}` alanı en az ({MINLENGTH}) karakter içerebilir']
     },
 
@@ -44,13 +44,38 @@ const MovieSchema = new Schema(
         type: Number,
         max: 250,
         min: 1
-    }, //Film Süresi
-       // cast director
-    director: Schema.Types.ObjectId, // director id
+    },
+    countries: {
+        type: Number,
+        max: 250,
+        min: 1
+    },
+    // cast director
+    director: [Schema.Types.ObjectId], // director id
     cast: [Schema.Types.ObjectId],
-        // Media
+    // Media
     cover: String,
-     createdAt: {
+    images: [{
+        url: String,
+        thumbUrl: String,
+        title: String,
+        desc: String,
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+    videos: [{
+        url: String,
+        ytid: String,
+        title: String,
+        desc: String,
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+    createdAt: {
         type: Date,
         default: Date.now
     }

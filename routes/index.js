@@ -13,8 +13,9 @@ router.get('/', (req, res, next) => {
   res.render('index', { title: 'Express' });
 });
 
+
 /* POST register User */
-router.post('/register', (req, res, next) => {
+router.post('/api/register', (req, res, next) => {
   const {user_name, user_password, user_email, user_fullname, user_question, user_answer, user_role, user_bio, user_birth, user_picture } = req.body;
   //const newData = new UserSchema(req.body);
   
@@ -49,7 +50,7 @@ router.post('/register', (req, res, next) => {
 });
 
 /* GET auth User */
-router.post('/auth', (req, res, next) => {
+router.post('/api/auth', (req, res, next) => {
   const {user_name, user_password, user_email, user_fullname, user_question, user_answer, user_role, user_bio, user_birth, user_picture } = req.body;
 
   UserSchema.findOne({

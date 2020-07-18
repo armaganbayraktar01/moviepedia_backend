@@ -6,7 +6,7 @@ const router = express.Router();
 const GenreSchema = require('../models/GenreSchema');
 const MovieSchema = require('../models/MovieSchema');
 
-// Get genre name
+// Get label name
 router.get('/filter/:genre_name', (req, res) => {
 	const { genre_name } = req.params;
 	const promise = MovieSchema.aggregate([
@@ -46,11 +46,11 @@ router.get('/filter/:genre_name', (req, res) => {
 		{
 			$unwind: '$cast'
 		},	
-		// match işlemi genres.genre unwind edilen genresten geliyor
+		// match işlemi genres.label unwind edilen genresten geliyor
 		{
 			$match: {
 				
-				"genres.genre" : genre_name
+				"genres.label" : genre_name
 			}
 		},
 		{
@@ -194,11 +194,11 @@ router.put('/:genre_id', (req, res, next) => {
 		}
 	);
 
-	promise.then((genre) => {
-		if (!genre)
+	promise.then((label) => {
+		if (!label)
 			next({ message: 'The genre was not found.', code: 99 });
 
-		res.json(genre);
+		res.json(label);
 	}).catch((err) => {
 		res.json(err);
 	});
@@ -206,11 +206,18 @@ router.put('/:genre_id', (req, res, next) => {
 
 // Post
 router.post('/', (req, res, next) => {
-	const newGenre = new GenreSchema(req.body);
+	const id = new mongoose.Types.ObjectId();
+
+	const newGenre = new GenreSchema({
+		_id: req.body.value !== "" ? req.body.value : id,
+		value: req.body.value !== "" ? req.body.value : id,
+		label: req.body.label
+	});
+
 	const promise = newGenre.save();
 	
 	promise.then((data) => {
-		//console.log(data);
+		// console.log(data);
 		res.json(data);
 
 	}).catch((err) => {
@@ -223,8 +230,8 @@ router.post('/', (req, res, next) => {
 router.delete('/:genre_id', (req, res, next) => {
 	const promise = GenreSchema.findByIdAndRemove(req.params.genre_id);
 
-	promise.then((genre) => {
-		if (!genre)
+	promise.then((label) => {
+		if (!label)
 			next({ message: 'The genre was not found.', code: 99 });
 
 		res.json({ status: 1 });
