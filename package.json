@@ -4,7 +4,7 @@
   "description": "",
   "main": "",
   "scripts": {
-    "start": "node --exec babel-node -- ./bin/www",
+    "start": "node --exec babel-node",
     "dev": "nodemon --exec babel-node -- ./bin/www",
     "stop": "taskkill -f -im node.exe",
     "test": "./node_modules/.bin/mocha --exit --recursive"
