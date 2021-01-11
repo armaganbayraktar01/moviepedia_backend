@@ -11,7 +11,7 @@ const PersonSchema = new Schema(
     fullname: {
         type: String,
         required: [true, '`{PATH}` alanı zorunludur.'],
-        maxlength: [15, '`{PATH}` alanı en fazla ({MAXLENGTH}) karakter içerebilir'],
+        maxlength: [25, '`{PATH}` alanı en fazla ({MAXLENGTH}) karakter içerebilir'],
         minlength: [1, '`{PATH}` alanı en az ({MINLENGTH}) karakter içerebilir']
     },
     imbd_id: String,

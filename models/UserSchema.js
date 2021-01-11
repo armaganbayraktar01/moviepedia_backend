@@ -35,13 +35,13 @@ const UserSchema = new Schema(
     },
     user_question: {
         type: String,
-        required: [true, '`{PATH}` alanı zorunludur.'],
+        //required: [true, '`{PATH}` alanı zorunludur.'],
         maxlength: [30, '`{PATH}` alanı en fazla ({MAXLENGTH}) karakter içerebilir'],
         minlength: [1, '`{PATH}` alanı en az ({MINLENGTH}) karakter içerebilir']
     },
     user_answer: {
         type: String,
-        required: [true, '`{PATH}` alanı zorunludur.'],
+        //required: [true, '`{PATH}` alanı zorunludur.'],
         maxlength: [30, '`{PATH}` alanı en fazla ({MAXLENGTH}) karakter içerebilir'],
         minlength: [1, '`{PATH}` alanı en az ({MINLENGTH}) karakter içerebilir']
     },

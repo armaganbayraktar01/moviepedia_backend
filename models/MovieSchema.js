@@ -23,7 +23,7 @@ const MovieSchema = new Schema(
     imbd_id: String,
     synopsis: {
         type: String,
-        maxlength: [300, '`{PATH}` alanı en fazla ({MAXLENGTH}) karakter içerebilir'],
+        maxlength: [1000, '`{PATH}` alanı en fazla ({MAXLENGTH}) karakter içerebilir'],
         minlength: [10, '`{PATH}` alanı en az ({MINLENGTH}) karakter içerebilir']
     },
 

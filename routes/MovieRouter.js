@@ -143,7 +143,7 @@ router.get('/filmrobot/genre=:genre_name?&imbd=:imbd?&relase=:start_year-:end_ye
 		{
 			$match: {	
 
-				"genres.label" : genre_name ? genre_name : { 
+				"genres.text" : genre_name ? genre_name : { 
 					$in: ['crime', 'comedy', 'horror', 'war', 'action', 'drama', 'history']
 				},
 				"imbd_rating" : imbd == undefined ? { "$gte" : "1" } : { "$gte" : imbd },
@@ -250,11 +250,11 @@ router.get('/filmrobot/genre=:genre_name?&imbd=:imbd?&relase=:start_year?&sort=:
 		{
 			$unwind: '$cast'
 		},	
-		// match işlemi genres.label unwind edilen genresten geliyor
+		// match işlemi genres.text unwind edilen genresten geliyor
 		{
 			$match: {	
 
-				"genres.label" : genre_name ? genre_name : { 
+				"genres.text" : genre_name ? genre_name : { 
 					$in: ['crime', 'comedy', 'horror', 'war', 'action', 'drama', 'history']
 				},
 				"imbd_rating" : imbd == undefined ? { "$gte" : "1" } : { "$gte" : imbd },

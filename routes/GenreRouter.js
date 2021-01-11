@@ -6,7 +6,7 @@ const router = express.Router();
 const GenreSchema = require('../models/GenreSchema');
 const MovieSchema = require('../models/MovieSchema');
 
-// Get label name
+// Get text name
 router.get('/filter/:genre_name', (req, res) => {
 	const { genre_name } = req.params;
 	const promise = MovieSchema.aggregate([
@@ -46,11 +46,11 @@ router.get('/filter/:genre_name', (req, res) => {
 		{
 			$unwind: '$cast'
 		},	
-		// match işlemi genres.label unwind edilen genresten geliyor
+		// match işlemi genres.text unwind edilen genresten geliyor
 		{
 			$match: {
 				
-				"genres.label" : genre_name
+				"genres.text" : genre_name
 			}
 		},
 		{
@@ -194,11 +194,11 @@ router.put('/:genre_id', (req, res, next) => {
 		}
 	);
 
-	promise.then((label) => {
-		if (!label)
+	promise.then((text) => {
+		if (!text)
 			next({ message: 'The genre was not found.', code: 99 });
 
-		res.json(label);
+		res.json(text);
 	}).catch((err) => {
 		res.json(err);
 	});
@@ -211,7 +211,7 @@ router.post('/', (req, res, next) => {
 	const newGenre = new GenreSchema({
 		_id: req.body.value !== "" ? req.body.value : id,
 		value: req.body.value !== "" ? req.body.value : id,
-		label: req.body.label
+		text: req.body.text
 	});
 
 	const promise = newGenre.save();
@@ -230,8 +230,8 @@ router.post('/', (req, res, next) => {
 router.delete('/:genre_id', (req, res, next) => {
 	const promise = GenreSchema.findByIdAndRemove(req.params.genre_id);
 
-	promise.then((label) => {
-		if (!label)
+	promise.then((text) => {
+		if (!text)
 			next({ message: 'The genre was not found.', code: 99 });
 
 		res.json({ status: 1 });
